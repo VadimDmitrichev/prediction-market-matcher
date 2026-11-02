@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package marketsimilarity;
+
+option go_package = "gen/marketsimilarity";
+
+service MarketComparisonService {
+  rpc CompareMarkets(CompareMarketsRequest) returns (CompareMarketsResponse);
+}
+
+message CompareMarketsRequest {
+  repeated MarketGroup first_markets = 1;
+  repeated MarketGroup second_markets = 2;
+}
+
+message CompareMarketsResponse {
+  bool success = 1;
+  string message = 2;
+  repeated MarketComparison comparisons = 3;
+}
+
+message MarketComparison {
+  string first_market_event_title = 1;
+  string second_market_event_title = 2;
+  int32 event_similarity_score = 3;
+  Market first_market = 4;
+  Market second_market = 5;
+  int32 market_similarity_score = 6;
+}
+
+message MarketGroup {
+  string title = 1;
+  repeated Market markets = 2;
+}
+
+message Market {
+  string question = 1;
+  string start_date = 2;
+  string end_date = 3;
+  double yes_price = 4;
+  double no_price = 5;
+}
