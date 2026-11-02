@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  grpc-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go-grpc-server
+    ports:
+      - "127.0.0.1:50051:50051"
+    environment:
+      - CONFIG_PATH=./config.yaml
+    volumes:
+      - ./config.yaml:/app/config.yaml
+    restart: unless-stopped
+    networks:
+      - grpc-network
+    user: "1000:1000"
+
+  api-gateway:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    depends_on:
+      - grpc-server
+    networks:
+      - grpc-network
+
+networks:
+  grpc-network:
+    driver: bridge
